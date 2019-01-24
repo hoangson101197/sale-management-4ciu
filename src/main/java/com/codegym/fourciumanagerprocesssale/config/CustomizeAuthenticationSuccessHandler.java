@@ -43,9 +43,9 @@ public class CustomizeAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         }
 
         if (isAdmin(roles)) {
-            url = "admin/..";
+            url = "admin/index";
         } else {
-            url = "member/..";
+            url = "member/home";
         }
 
         return url;
