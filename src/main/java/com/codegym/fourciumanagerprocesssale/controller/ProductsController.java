@@ -17,7 +17,7 @@ import java.io.*;
 import java.util.Date;
 
 @Controller
-@RequestMapping("admin")
+@RequestMapping("/admin")
 public class ProductsController {
     @Autowired
     private ProductsService productsService;
