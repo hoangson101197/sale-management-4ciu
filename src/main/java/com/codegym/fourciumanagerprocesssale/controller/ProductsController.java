@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.*;
 import java.util.Date;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("admin")
@@ -23,8 +24,13 @@ public class ProductsController {
     private ProductsService productsService;
 
     @GetMapping("/products")
-    public ModelAndView ProductList(@PageableDefault(size = 5) Pageable pageable) {
-        Page<Product> products = productsService.findAll(pageable);
+    public ModelAndView ProductList(@ModelAttribute("s") String s, @PageableDefault(size = 5) Pageable pageable) {
+        Page<Product> products;
+        if (s == null) {
+            products = productsService.findAll(pageable);
+        } else {
+            products = productsService.findAllByNameContaining(s, pageable);
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("products", products);
         modelAndView.setViewName("product/products");
@@ -85,4 +91,9 @@ public class ProductsController {
         }
         return nameOfFileServer;
     }
+
+//    @GetMapping("/edit-product/{id}")
+//    public ModelAndView viewEditProduct(@PathVariable Long id) {
+//        Optional<Product> product = productsService.findById(id);
+//    }
 }
