@@ -92,8 +92,32 @@ public class ProductsController {
         return nameOfFileServer;
     }
 
-//    @GetMapping("/edit-product/{id}")
-//    public ModelAndView viewEditProduct(@PathVariable Long id) {
-//        Optional<Product> product = productsService.findById(id);
-//    }
+    @GetMapping("/edit-product/{id}")
+    public ModelAndView viewEditProduct(@PathVariable Long id) {
+        Optional<Product> product = productsService.findById(id);
+        if (product != null) {
+            ModelAndView modelAndView = new ModelAndView("/product/edit");
+            modelAndView.addObject("product", product);
+            return modelAndView;
+        } else {
+            ModelAndView modelAndView = new ModelAndView("/error.404");
+            return modelAndView;
+        }
+    }
+
+    @PostMapping("/edit-product")
+    public ModelAndView updateProduct(@Validated @ModelAttribute("product") Product product,
+                                      @PathVariable("file") MultipartFile file, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            ModelAndView modelAndView = new ModelAndView("product/edit");
+            return modelAndView;
+        } else {
+            product.setImage(uploadFiles(file));
+            productsService.save(product);
+            ModelAndView modelAndView = new ModelAndView("product/edit");
+            modelAndView.addObject("product", product);
+            modelAndView.addObject("message", "Succesfully!");
+            return modelAndView;
+        }
+    }
 }

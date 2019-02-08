@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Website Manager</title>
+    <title>Edit Product</title>
 
     <!--Custom Font-->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -75,14 +75,13 @@
     <ul class="nav menu">
         <li><a href="/"><em class="fa fa-dashboard">&nbsp;</em>Trang chính</a></li>
         <li><a href="/admin/accounts"><em class="fa fa-linux">&nbsp;</em> Quản lý thành viên</a></li>
-        <li class="active"><a href="/products"><em class="fa fa-android">&nbsp;</em> Quản lý sản phẩm</a></li>
-        <li><a href="/producers"><em class="fa fa-code">&nbsp;</em> Quản lý nhà sản xuất</a></li>
-        <li><a href="/bills"><em class="fa fa-clock-o">&nbsp;</em> Quản lý đơn hàng</a></li>
+        <li class="active"><a href="/admin/products"><em class="fa fa-android">&nbsp;</em> Quản lý sản phẩm</a></li>
+        <li><a href="/producers"><em class="fa fa-apple">&nbsp;</em> Quản lý nhà sản xuất</a></li>
+        <li><a href="/bills"><em class="glyphicon glyphicon-list-alt">&nbsp;</em> Quản lý đơn hàng</a></li>
         <li><form method="POST" th:action="@{/logout}">
             <button class="btn btn-lg btn-primary btn-block" name="Submit" value="Logout" type="Submit"
                     th:text="Logout"></button>
-        </form></li>
-    </ul>
+        </form></li>    </ul>
 </div><!--/.sidebar-->
 
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
@@ -101,52 +100,79 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="header">
-                            <h3 class="title">Danh Sách Sản Phẩm</h3>
-                            <form action="">
-                                Tìm kiếm sản phẩm :
-                                <input type="text" name="s">
-                                <input type="submit" value="Search">
-                                <p>
-                                    <a href="/admin/create-product">Thêm Sản Phẩm</a>
-                                </p>
-                            </form><br/>
+                            <h3 class="title">Sửa thông tin sản phẩm</h3>
+                            <p>
+                                <a href="/admin/products">Chuyển đến trang danh sách</a>
+                            </p>
+                            <th:block th:if="${message}">
+                                <p th:text="${message}" style="color: red"></p>
+                            </th:block>
                         </div>
                         <div class="content table-responsive table-full-width">
                             <table class="table table-hover table-striped">
-                                <thead>
-                                <th>STT</th>
-                                <th>ID</th>
-                                <th>Tên</th>
-                                <th>Ảnh</th>
-                                <!--<th>Size</th>-->
-                                <th>Giá Sản phẩm</th>
-                                <!--<th>Loại</th>-->
-                                <!--<th>Nhà Sản Xuất</th>-->
-                                <th>Sửa</th>
-                                <th>Xóa</th>
-                                </thead>
-                                <tbody>
-                                <th:block th:each="product, istart : ${products}">
+                                <form th:action="@{/admin/edit-product}" enctype="multipart/form-data" th:object="${product}" method="post">
+                                    <input th:type="hidden" name="id" th:field="*{id}">
                                     <tr>
-                                        <td th:text="${istart.index + 1}"></td>
-                                        <td th:text="${product.id}"></td>
-                                        <td th:text="${product.name}"></td>
-                                        <td><img th:src="@{/resources/__${product.image}__}" height="200" width="200"/></td>
-                                        <!--<td th:text="${product.size}"></td>-->
-                                        <td th:text="${product.unitPrice}"></td>
-                                        <!--<td th:text="${product.productType.name}"></td>-->
-                                        <!--<td th:text="${product.producer.name}"></td>-->
-                                        <td><a th:href="@{/admin/edit-product/__${product.id}__ }">Sửa</a></td>
-                                        <td><a th:href="@{/admin/delete-product/__${product.id}__ }">Xóa</a></td>
+                                        <td>Name</td>
+                                        <td><input type="text" th:field="*{name}"></td>
+                                        <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</td>
                                     </tr>
-                                </th:block>
-                                </tbody>
+                                    <tr>
+                                        <td>Image</td>
+                                        <td><input th:type="file" th:name="file" th:multiple></td>
+                                    </tr>
+                                    <!--<tr>-->
+                                    <!--<td>Sản Phẩm Hot</td>-->
+                                    <!--<td><input type="text" th:field="*{hot}"></td>-->
+                                    <!--<td th:if="${#fields.hasErrors('hot')}" th:errors="*{hot}">Hot Error</td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                    <!--<td>Size</td>-->
+                                    <!--<td><input type="text" th:field="*{size}"></td>-->
+                                    <!--<td th:if="${#fields.hasErrors('size')}" th:errors="*{size}">size Error</td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                    <!--<td>Chi tiết</td>-->
+                                    <!--<td><input type="text" th:field="*{detail}"></td>-->
+                                    <!--<td th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}">Detail Error</td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                    <td>Giá Sản Phảm</td>
+                                    <td><input type="text" th:field="*{unitPrice}"></td>
+                                    <td th:if="${#fields.hasErrors('unitPrice')}" th:errors="*{unitPrice}">UnitPrice Error</td>
+                                    </tr>
+                                    <!--<tr>-->
+                                    <!--<td>Giá Khuyến Mãi</td>-->
+                                    <!--<td><input type="text" th:field="*{promotionPrice}"></td>-->
+                                    <!--<td th:if="${#fields.hasErrors('promotionPrice')}" th:errors="*{promotionPrice}">PromotionPrice Error</td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                    <!--<td>Loại Sản Phẩm</td>-->
+                                    <!--<td>-->
+                                    <!--<select th:field="*{productType}"} >-->
+                                    <!--<option th:each="productType : ${productTypes}" th:value="${productType.id}" th:text="${productType.name}">-->
+
+                                    <!--</option>-->
+                                    <!--</select>-->
+                                    <!--</td>-->
+
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                    <!--<td>Nhà Sản Xuất</td>-->
+                                    <!--<td>-->
+                                    <!--<select th:field="*{producer}"}>-->
+                                    <!--<option th:each="producer : ${producers}" th:value="${producer.id}" th:text="${producer.name}">-->
+
+                                    <!--</option>-->
+                                    <!--</select>-->
+                                    <!--</td>-->
+                                    <!--</tr>-->
+                                    <tr>
+                                        <td></td>
+                                        <td><input type="submit" value="Update"></td>
+                                    </tr>
+                                </form>
                             </table>
-                            <div>
-                                <a th:href="@{'/admin/products'(page=${products.number - 1})}" th:if="${products.hasPrevious()}">Previous</a>
-                                <span th:text="${products.number + 1}"></span>/<span th:text="${products.totalPages}"></span>
-                                <a th:href="@{'/admin/products'(page=${products.number + 1})}" th:if="${products.hasNext()}">Next</a>
-                            </div>
                         </div>
                     </div>
                 </div>
